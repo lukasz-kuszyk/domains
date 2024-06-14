@@ -7,7 +7,7 @@ namespace Nauta\Domain\Tests\Unit\Tax\BaseValue;
 use Nauta\Domain\Tax\BaseValue\BaseValue;
 use PHPUnit\Framework\TestCase;
 
-abstract class AbstractBaseValueTest extends TestCase
+abstract class AbstractBaseValueTestCase extends TestCase
 {
     abstract protected function createInstance(int $value): BaseValue;
 

@@ -9,9 +9,9 @@ use Nauta\Domain\Tax\BaseValue\GrossValue;
 use Nauta\Domain\Tax\BaseValue\NetValue;
 use Nauta\Domain\Tax\BaseValue\VatRateValue;
 use Nauta\Domain\Tax\BaseValue\VatValue;
-use Nauta\Domain\Tests\Unit\Tax\BaseValue\AbstractBaseValueTest;
+use Nauta\Domain\Tests\Unit\Tax\BaseValue\AbstractBaseValueTestCase;
 
-class VatValueTest extends AbstractBaseValueTest
+final class VatValueTest extends AbstractBaseValueTestCase
 {
     protected function createInstance(int $value): BaseValue
     {

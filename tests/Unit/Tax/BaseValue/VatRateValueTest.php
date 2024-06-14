@@ -8,7 +8,7 @@ use Brick\Math\BigDecimal;
 use Nauta\Domain\Tax\BaseValue\BaseValue;
 use Nauta\Domain\Tax\BaseValue\VatRateValue;
 
-class VatRateValueTest extends AbstractBaseValueTest
+final class VatRateValueTest extends AbstractBaseValueTestCase
 {
     protected function createInstance(int $value): BaseValue
     {
