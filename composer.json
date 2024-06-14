@@ -1,0 +1,13 @@
+{
+  "name": "nauta/domain",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Nauta\\Domain\\": "src"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "brick/math": "^0.12.1"
+  }
+}
