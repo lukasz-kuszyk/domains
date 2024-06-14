@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Nauta\Domain\Tax\BaseValue;
 
 use Brick\Math\BigDecimal;
-use Stringable;
 
-abstract class BaseValue implements Stringable
+abstract class BaseValue implements \Stringable
 {
     abstract public static function fromBigDecimal(BigDecimal $value): BaseValue;
 
