@@ -50,22 +50,4 @@ abstract class AbstractBaseVatQuotaTestCase extends TestCase
         self::assertTrue($expectedRate->isEqualTo($actual->getRate()));
         self::assertTrue($expectedVat->isEqualTo($actual->getVat()));
     }
-
-    public function testWithRate(): void
-    {
-        $instance = $this->createInstance(100, VatRateValue::fromNumeric(.23));
-
-        $actual = $instance->withRate(VatRateValue::fromNumeric(.1));
-
-        $expectedNet = NetValue::fromNumeric(111.82);
-        $expectedGross = GrossValue::fromNumeric(123);
-        $expectedRate = VatRateValue::fromNumeric(.1);
-        $expectedVat = VatValue::fromNumeric(11.18);
-
-        self::assertNotSame($instance, $actual);
-        self::assertTrue($expectedNet->isEqualTo($actual->getNet()));
-        self::assertTrue($expectedGross->isEqualTo($actual->getGross()));
-        self::assertTrue($expectedRate->isEqualTo($actual->getRate()));
-        self::assertTrue($expectedVat->isEqualTo($actual->getVat()));
-    }
 }

@@ -21,21 +21,21 @@ final class FromNetVatQuotas extends BaseVatQuota
         );
     }
 
-    final public function withNet(NetValue $net): FromGrossVatQuotas
+    final public function withNet(NetValue $net): FromNetVatQuotas
     {
-        $gross = GrossValue::fromNet($net, VatValue::fromNet($net, $this->getRate()));
-
-        return FromGrossVatQuotas::fromGrossVatQuotas($gross, $this->getRate());
+        return FromNetVatQuotas::fromNetVatQuotas($net, $this->getRate());
     }
 
-    final public function withGross(GrossValue $gross): FromGrossVatQuotas
+    final public function withGross(GrossValue $gross): FromNetVatQuotas
     {
-        return FromGrossVatQuotas::fromGrossVatQuotas($gross, $this->getRate());
+        $net = NetValue::fromGross($gross, VatValue::fromGross($gross, $this->getRate()));
+
+        return FromNetVatQuotas::fromNetVatQuotas($net, $this->getRate());
     }
 
-    final public function withRate(VatRateValue $rate): FromGrossVatQuotas
+    final public function withRate(VatRateValue $rate): FromNetVatQuotas
     {
-        return FromGrossVatQuotas::fromGrossVatQuotas($this->getGross(), $rate);
+        return FromNetVatQuotas::fromNetVatQuotas($this->getNet(), $rate);
     }
 
     private static function getVatValue(NetValue $net, VatRateValue $rate): VatValue

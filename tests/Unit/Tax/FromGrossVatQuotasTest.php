@@ -23,6 +23,24 @@ final class FromGrossVatQuotasTest extends AbstractBaseVatQuotaTestCase
         self::assertTrue($expectedNet->isEqualTo($actual->getNet()));
     }
 
+    public function testWithRate(): void
+    {
+        $instance = $this->createInstance(100, VatRateValue::fromNumeric(.23));
+
+        $actual = $instance->withRate(VatRateValue::fromNumeric(.1));
+
+        $expectedNet = NetValue::fromNumeric(90.91);
+        $expectedGross = GrossValue::fromNumeric(100);
+        $expectedRate = VatRateValue::fromNumeric(.1);
+        $expectedVat = VatValue::fromNumeric(9.09);
+
+        self::assertNotSame($instance, $actual);
+        self::assertTrue($expectedNet->isEqualTo($actual->getNet()));
+        self::assertTrue($expectedGross->isEqualTo($actual->getGross()));
+        self::assertTrue($expectedRate->isEqualTo($actual->getRate()));
+        self::assertTrue($expectedVat->isEqualTo($actual->getVat()));
+    }
+
     protected function createInstance(float $value, VatRateValue $rate): FromGrossVatQuotas
     {
         return FromGrossVatQuotas::fromGrossVatQuotas(GrossValue::fromNumeric($value), $rate);
