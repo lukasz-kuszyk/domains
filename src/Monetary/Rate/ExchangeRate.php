@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Nauta\Domain\Monetary;
+namespace Nauta\Domain\Monetary\Rate;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
+use Nauta\Domain\Monetary\Currency;
 
 abstract class ExchangeRate
 {

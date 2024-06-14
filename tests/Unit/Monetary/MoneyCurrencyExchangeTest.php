@@ -6,21 +6,22 @@ namespace Nauta\Domain\Tests\Unit\Monetary;
 
 use Nauta\Domain\Monetary\Currency;
 use Nauta\Domain\Monetary\Exception\InvalidCurrencyExchangeOperationException;
-use Nauta\Domain\Monetary\ExchangeOperation;
-use Nauta\Domain\Monetary\ExchangeRate;
 use Nauta\Domain\Monetary\Money;
+use Nauta\Domain\Monetary\MoneyCurrencyExchange;
+use Nauta\Domain\Monetary\Rate\BuyRate;
+use Nauta\Domain\Monetary\Rate\SellRate;
 use PHPUnit\Framework\TestCase;
 
-class ExchangeOperationTest extends TestCase
+class MoneyCurrencyExchangeTest extends TestCase
 {
     public function testOperationSell(): void
     {
         $currencyPLN = new Currency('PLN');
         $currencyEUR = new Currency('EUR');
 
-        $rate = ExchangeRate::asSellRate($currencyEUR, $currencyPLN, 4.60);
+        $rate = SellRate::asSellRate($currencyEUR, $currencyPLN, 4.60);
 
-        $actual = ExchangeOperation::fromSellOperation(
+        $actual = MoneyCurrencyExchange::fromSellOperation(
             new Money($currencyEUR, 100),
             $rate,
         );
@@ -35,10 +36,10 @@ class ExchangeOperationTest extends TestCase
         $currencyPLN = new Currency('PLN');
         $currencyEUR = new Currency('EUR');
 
-        $rate = ExchangeRate::asSellRate($currencyEUR, $currencyPLN, 4.60)
+        $rate = SellRate::asSellRate($currencyEUR, $currencyPLN, 4.60)
             ->invert();
 
-        $actual = ExchangeOperation::fromSellOperation(
+        $actual = MoneyCurrencyExchange::fromSellOperation(
             new Money($currencyPLN, 460.0),
             $rate,
         );
@@ -53,9 +54,9 @@ class ExchangeOperationTest extends TestCase
         $currencyPLN = new Currency('PLN');
         $currencyEUR = new Currency('EUR');
 
-        $rate = ExchangeRate::asBuyRate($currencyEUR, $currencyPLN, 4.50);
+        $rate = BuyRate::asBuyRate($currencyEUR, $currencyPLN, 4.50);
 
-        $actual = ExchangeOperation::fromBuyOperation(
+        $actual = MoneyCurrencyExchange::fromBuyOperation(
             new Money($currencyEUR, 100),
             $rate
         );
@@ -70,10 +71,10 @@ class ExchangeOperationTest extends TestCase
         $currencyPLN = new Currency('PLN');
         $currencyEUR = new Currency('EUR');
 
-        $rate = ExchangeRate::asBuyRate($currencyEUR, $currencyPLN, 4.50)
+        $rate = BuyRate::asBuyRate($currencyEUR, $currencyPLN, 4.50)
             ->invert();
 
-        $actual = ExchangeOperation::fromBuyOperation(
+        $actual = MoneyCurrencyExchange::fromBuyOperation(
             new Money($currencyPLN, 450.0),
             $rate
         );
@@ -87,9 +88,9 @@ class ExchangeOperationTest extends TestCase
     {
         self::expectException(InvalidCurrencyExchangeOperationException::class);
 
-        ExchangeOperation::fromSellOperation(
+        MoneyCurrencyExchange::fromSellOperation(
             new Money(new Currency('A'), 1.0),
-            ExchangeRate::asSellRate(new Currency('B'), new Currency('A'), 1.0)
+            SellRate::asSellRate(new Currency('B'), new Currency('A'), 1.0)
         );
     }
 
@@ -97,9 +98,9 @@ class ExchangeOperationTest extends TestCase
     {
         self::expectException(InvalidCurrencyExchangeOperationException::class);
 
-        ExchangeOperation::fromBuyOperation(
+        MoneyCurrencyExchange::fromBuyOperation(
             new Money(new Currency('A'), 1.0),
-            ExchangeRate::asBuyRate(new Currency('B'), new Currency('A'), 1.0)
+            BuyRate::asBuyRate(new Currency('B'), new Currency('A'), 1.0)
         );
     }
 }

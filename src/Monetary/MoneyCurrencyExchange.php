@@ -7,8 +7,11 @@ namespace Nauta\Domain\Monetary;
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 use Nauta\Domain\Monetary\Exception\InvalidCurrencyExchangeOperationException;
+use Nauta\Domain\Monetary\Rate\BuyRate;
+use Nauta\Domain\Monetary\Rate\ExchangeRate;
+use Nauta\Domain\Monetary\Rate\SellRate;
 
-class ExchangeOperation
+class MoneyCurrencyExchange
 {
     public const OPERATION_SCALE = 2;
     public const OPERATION_ROUNDING_MODE = RoundingMode::HALF_UP;
@@ -20,7 +23,7 @@ class ExchangeOperation
     ) {
     }
 
-    public static function fromBuyOperation(Money $money, BuyRate $rate): ExchangeOperation
+    public static function fromBuyOperation(Money $money, BuyRate $rate): MoneyCurrencyExchange
     {
         if (!$money->currency->isEqualTo($rate->fromCurrency)) {
             throw new InvalidCurrencyExchangeOperationException();
@@ -30,14 +33,14 @@ class ExchangeOperation
             ->multipliedBy($rate->rate)
             ->toScale(self::OPERATION_SCALE, self::OPERATION_ROUNDING_MODE);
 
-        return new ExchangeOperation(
+        return new MoneyCurrencyExchange(
             $money,
             new Money($rate->toCurrency, $amount->toFloat()),
             $rate,
         );
     }
 
-    public static function fromSellOperation(Money $money, SellRate $rate): ExchangeOperation
+    public static function fromSellOperation(Money $money, SellRate $rate): MoneyCurrencyExchange
     {
         if (!$money->currency->isEqualTo($rate->fromCurrency)) {
             throw new InvalidCurrencyExchangeOperationException();
@@ -47,7 +50,7 @@ class ExchangeOperation
             ->multipliedBy($rate->rate)
             ->toScale(self::OPERATION_SCALE, self::OPERATION_ROUNDING_MODE);
 
-        return new ExchangeOperation(
+        return new MoneyCurrencyExchange(
             $money,
             new Money($rate->toCurrency, $amount->toFloat()),
             $rate,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nauta\Domain\Monetary;
+namespace Nauta\Domain\Monetary\Rate;
 
 class BuyRate extends ExchangeRate
 {
