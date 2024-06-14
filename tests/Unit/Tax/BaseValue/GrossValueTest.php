@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Unit\Tax\BaseValue;
+namespace Nauta\Domain\Tests\Unit\Tax\BaseValue;
 
 use Nauta\Domain\Tax\BaseValue\BaseValue;
 use Nauta\Domain\Tax\BaseValue\GrossValue;
 use Nauta\Domain\Tax\BaseValue\NetValue;
 use Nauta\Domain\Tax\BaseValue\VatValue;
-use Nauta\Domain\Tests\Unit\Tax\BaseValue\AbstractBaseValueTestCase;
 
 final class GrossValueTest extends AbstractBaseValueTestCase
 {
