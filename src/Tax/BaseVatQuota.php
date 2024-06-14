@@ -35,6 +35,14 @@ abstract class BaseVatQuota
         return FromGrossVatQuotas::fromGrossVatQuotas($gross, $rate);
     }
 
+    public function isEqualTo(BaseVatQuota $quota): bool
+    {
+        return $quota->net->isEqualTo($this->net)
+            && $quota->gross->isEqualTo($this->gross)
+            && $quota->vat->isEqualTo($this->vat)
+            && $quota->rate->isEqualTo($this->rate);
+    }
+
     final public function getNet(): NetValue
     {
         return $this->net;

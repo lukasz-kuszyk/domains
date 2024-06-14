@@ -8,6 +8,7 @@ use Nauta\Domain\Tax\BaseValue\GrossValue;
 use Nauta\Domain\Tax\BaseValue\NetValue;
 use Nauta\Domain\Tax\BaseValue\VatRateValue;
 use Nauta\Domain\Tax\BaseValue\VatValue;
+use Nauta\Domain\Tax\BaseVatQuota;
 use Nauta\Domain\Tax\FromNetVatQuotas;
 
 final class FromNetVatQuotasTest extends AbstractBaseVatQuotaTestCase
@@ -39,6 +40,21 @@ final class FromNetVatQuotasTest extends AbstractBaseVatQuotaTestCase
         self::assertTrue($expectedGross->isEqualTo($actual->getGross()));
         self::assertTrue($expectedRate->isEqualTo($actual->getRate()));
         self::assertTrue($expectedVat->isEqualTo($actual->getVat()));
+    }
+
+    public function testIsEqualTo(): void
+    {
+        $expectedGross = BaseVatQuota::fromGross(
+            GrossValue::fromNumeric(123),
+            VatRateValue::fromNumeric(.23),
+        );
+
+        $actualNet = BaseVatQuota::fromNet(
+            NetValue::fromNumeric(100),
+            VatRateValue::fromNumeric(.23),
+        );
+
+        self::assertTrue($expectedGross->isEqualTo($actualNet));
     }
 
     protected function createInstance(float $value, VatRateValue $rate): FromNetVatQuotas
