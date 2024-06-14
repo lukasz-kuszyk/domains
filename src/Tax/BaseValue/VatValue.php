@@ -9,16 +9,6 @@ use Brick\Math\RoundingMode;
 
 class VatValue extends BaseValue
 {
-    final public static function fromBigDecimal(BigDecimal $value): VatValue
-    {
-        return new self($value);
-    }
-
-    final public static function fromNumeric(float|int $value): VatValue
-    {
-        return new self(BigDecimal::of($value));
-    }
-
     final public static function fromNet(NetValue $net, VatRateValue $rate): VatValue
     {
         return self::fromBigDecimal(self::calcFromNet($net, $rate));
