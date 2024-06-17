@@ -6,59 +6,45 @@ namespace Nauta\Domain\Tests\Unit\Tax;
 
 use Nauta\Domain\Tax\Base\Gross;
 use Nauta\Domain\Tax\Base\Net;
-use Nauta\Domain\Tax\Base\Vat;
 use Nauta\Domain\Tax\Base\VatRate;
 use Nauta\Domain\Tax\GrossVatQuota;
 use Nauta\Domain\Tax\NetVatQuota;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class VatQuotaTest extends TestCase
 {
-    public function testFromGrossAndRate(): void
+    public static function provideEqualToAsTrue(): \Generator
     {
-        $result = GrossVatQuota::fromGrossAndRate(
-            Gross::fromNumeric(123),
-            VatRate::fromFraction(.23),
-        );
-
-        self::assertTrue(
-            $result->getNet()->isEqualTo(Net::fromNumeric(100))
-        );
-
-        self::assertTrue(
-            $result->getVat()->isEqualTo(Vat::fromNumeric(23))
-        );
-
-        self::assertTrue(
-            $result->getGross()->isEqualTo(Gross::fromNumeric(123))
-        );
-
-        self::assertTrue(
-            $result->getRate()->isEqualTo(VatRate::fromFraction(.23))
-        );
+        yield [123, 100, .23];
+        yield [0, 0, .0];
+        yield [0, 0, .23];
+        yield [100, 100, .0];
     }
 
-    public function testFromNetAndRate(): void
+    #[DataProvider('provideEqualToAsTrue')]
+    public function testEqualToAsTrue(int $gross, int $net, float $rate): void
     {
-        $result = NetVatQuota::fromNetAndRate(
-            Net::fromNumeric(100),
-            VatRate::fromFraction(.23),
-        );
+        $grossQuota = GrossVatQuota::fromGrossAndRate(Gross::fromNumeric($gross), VatRate::fromFraction($rate));
+        $netQuota = NetVatQuota::fromNetAndRate(Net::fromNumeric($net), VatRate::fromFraction($rate));
 
-        self::assertTrue(
-            $result->getNet()->isEqualTo(Net::fromNumeric(100))
-        );
+        self::assertTrue($grossQuota->isEqualTo($netQuota));
+    }
 
-        self::assertTrue(
-            $result->getVat()->isEqualTo(Vat::fromNumeric(23))
-        );
+    public static function provideEqualToAsFalse(): \Generator
+    {
+        yield [110, .10, 110, .20];
+        yield [120, .10, 140, .10];
+        yield [0, 0, 20, 0];
+        yield [20, 0, 0, 0];
+    }
 
-        self::assertTrue(
-            $result->getGross()->isEqualTo(Gross::fromNumeric(123))
-        );
+    #[DataProvider('provideEqualToAsFalse')]
+    public function testEqualToAsFalse(int $gross, float $grossRate, int $net, float $netRate): void
+    {
+        $grossQuota = GrossVatQuota::fromGrossAndRate(Gross::fromNumeric($gross), VatRate::fromFraction($grossRate));
+        $netQuota = NetVatQuota::fromNetAndRate(Net::fromNumeric($net), VatRate::fromFraction($netRate));
 
-        self::assertTrue(
-            $result->getRate()->isEqualTo(VatRate::fromFraction(.23))
-        );
+        self::assertFalse($grossQuota->isEqualTo($netQuota));
     }
 }
