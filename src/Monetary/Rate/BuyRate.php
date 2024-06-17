@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace Nauta\Domain\Monetary\Rate;
 
-class BuyRate extends ExchangeRate
+use Brick\Math\BigDecimal;
+use Nauta\Domain\Contracts\Logic\IsSelfComparable;
+
+class BuyRate extends ExchangeRate implements IsSelfComparable
 {
+    public function isEqualTo(SellRate $rate): bool
+    {
+        return BigDecimal::of($rate->getRateAsFraction())->isEqualTo($this->getRateAsFraction());
+    }
 }

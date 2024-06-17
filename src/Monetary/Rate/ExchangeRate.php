@@ -6,9 +6,10 @@ namespace Nauta\Domain\Monetary\Rate;
 
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
-use Nauta\Domain\Monetary\Currency;
+use Nauta\Domain\Contracts\Common\IsRate;
+use Nauta\Domain\Monetary\Base\Currency;
 
-abstract class ExchangeRate
+abstract class ExchangeRate implements IsRate
 {
     public const INVERT_SCALE = 5;
     public const PROVIDE_SCALE = 4;
@@ -17,7 +18,7 @@ abstract class ExchangeRate
     final private function __construct(
         public readonly Currency $fromCurrency,
         public readonly Currency $toCurrency,
-        public readonly float $rate,
+        private readonly float $rate,
     ) {
     }
 
@@ -38,6 +39,18 @@ abstract class ExchangeRate
     public static function asSellRate(Currency $sellCurrency, Currency $buyCurrency, float $rate): SellRate
     {
         return new SellRate($sellCurrency, $buyCurrency, self::scaleRate($rate)->toFloat());
+    }
+
+    public function getRateAsFraction(): float
+    {
+        return $this->rate;
+    }
+
+    public function getRateAsPercentage(): float
+    {
+        return BigDecimal::of($this->rate)
+            ->multipliedBy(100)
+            ->toFloat();
     }
 
     private static function scaleRate(float $rate): BigDecimal
